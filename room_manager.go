@@ -37,7 +37,7 @@ type roomMsg struct {
 	// Name of the room the message goes to.
 	to string
 	// Data being send to specified room.
-	msg *message
+	msg *Message
 }
 
 // Wrapper for normal lobbies to add a member counter.
@@ -151,7 +151,7 @@ func (rm *RoomManager) run() {
 			m, ok := rm.rooms[req.name]
 			if !ok { // If room was not found for join request, create it!
 				m = &managedRoom{
-					room:  NewRoom(),
+					room:  NewRoom(req.name),
 					count: 1, // start with count 1 for first user
 				}
 				rm.rooms[req.name] = m
@@ -248,7 +248,7 @@ func (rm *RoomManager) LeaveAll(conn *Connection) {
 func (rm *RoomManager) Emit(to string, event string, data interface{}) {
 	rm.send <- &roomMsg{
 		to: to,
-		msg: &message{
+		msg: &Message{
 			event: event,
 			data:  data,
 		},

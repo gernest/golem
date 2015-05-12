@@ -55,7 +55,7 @@ type Connection struct {
 	// Associated router.
 	router *Router
 	// Buffered channel of outbound messages.
-	send chan *message
+	send chan *Message
 	//
 	extension interface{}
 }
@@ -65,7 +65,7 @@ func newConnection(s *websocket.Conn, r *Router) *Connection {
 	return &Connection{
 		socket:    s,
 		router:    r,
-		send:      make(chan *message, sendChannelSize),
+		send:      make(chan *Message, sendChannelSize),
 		extension: nil,
 	}
 }
@@ -97,7 +97,7 @@ func (conn *Connection) extend(e interface{}) {
 // Emit event with provided data. The data will be automatically marshalled and packed according
 // to the active protocol of the router the connection belongs to.
 func (conn *Connection) Emit(event string, data interface{}) {
-	conn.send <- &message{
+	conn.send <- &Message{
 		event: event,
 		data:  data,
 	}
@@ -153,7 +153,7 @@ func (conn *Connection) writePumpHeartbeat(mode int) {
 			if ok {
 				if data, err := conn.router.protocol.MarshalAndPack(message.event, message.data); err == nil {
 					if err := conn.write(mode, data); err != nil {
-						return 
+						return
 					}
 				} else {
                     // TODO: logging
@@ -202,7 +202,7 @@ func (conn *Connection) writePump(mode int) {
 			if ok {
 				if data, err := conn.router.protocol.MarshalAndPack(message.event, message.data); err == nil {
 					if err := conn.write(mode, data); err != nil {
-						return 
+						return
 					}
 				} else {
                     // TODO: logging

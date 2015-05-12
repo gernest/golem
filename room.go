@@ -25,6 +25,8 @@ const (
 // Rooms are groups of connections. A room provides methods to communicate with all
 // members of the group simultaneously.
 type Room struct {
+	// ID uuid of the room
+	name string
 	// Map of member connections
 	members map[*Connection]bool
 	// Stop channel
@@ -34,17 +36,18 @@ type Room struct {
 	// Leave request
 	leave chan *Connection
 	// Broadcast to room members
-	send chan *message
+	send chan *Message
 }
 
 // Creates and initialised a room and returns pointer to it.
-func NewRoom() *Room {
+func NewRoom(name string) *Room {
 	r := Room{
+		name:    name,
 		members: make(map[*Connection]bool),
 		stop:    make(chan bool),
 		join:    make(chan *Connection),
 		leave:   make(chan *Connection),
-		send:    make(chan *message, roomSendChannelSize),
+		send:    make(chan *Message, roomSendChannelSize),
 	}
 	// Run the message loop
 	go r.run()
@@ -97,8 +100,12 @@ func (r *Room) Leave(conn *Connection) {
 
 // Emits message event to all members of the room.
 func (r *Room) Emit(event string, data interface{}) {
-	r.send <- &message{
+	r.send <- &Message{
 		event: event,
 		data:  data,
 	}
+}
+
+func (r *Room) Name() string {
+	return r.name
 }
