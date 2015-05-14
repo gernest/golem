@@ -23,3 +23,19 @@ type Message struct {
 	event string
 	data  interface{}
 }
+
+func (m *Message) GetEvent() string {
+	return m.event
+}
+
+func (m *Message) GetData() interface{} {
+	return m.data
+}
+
+func (m *Message) SetData(d interface{}) {
+	m.data = d
+}
+
+func (m *Message) SetEvent(evt string) {
+	m.event = evt
+}
