@@ -223,6 +223,6 @@ func (conn *Connection) writePump(mode int) {
 	}
 }
 
-func(conn *Connection)SetSendCallBack(cb DataCallback){
-	conn.sendCallback=cb
+func (conn *Connection) SetSendCallBack(cb DataCallback) {
+	conn.sendCallback = cb
 }

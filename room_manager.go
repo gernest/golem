@@ -18,11 +18,19 @@
 
 package golem
 
+import (
+	"log"
+)
+
 const (
 	roomManagerCreateEvent        = "create"
 	roomManagerRemoveEvent        = "remove"
 	CloseConnectionOnLastRoomLeft = 1
 )
+
+func init() {
+	log.SetFlags(log.Lshortfile)
+}
 
 // Room request information holding name of the room and the connection, which requested.
 type roomReq struct {
